@@ -838,5 +838,19 @@ void GPS_Updata()
 
 void WriteSDCard()
 {
-  
+  myFile = SD.open("test.txt", FILE_WRITE);
+
+  // if the file opened okay, write to it:
+  if (myFile) {
+    Serial.print("Writing all data to test.txt...");
+    myFile.print("WaterLevel:");myFile.println("WaterLevel:");
+    // close the file:
+    myFile.close();
+    Serial.println("done.");
+  } 
+  else {
+    // if the file didn't open, print an error:
+    Serial.println("error opening test.txt");
+  }
+  myFile.close();
 }
