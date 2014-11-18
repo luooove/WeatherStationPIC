@@ -285,6 +285,19 @@ float WindDirValue = 0;
  * ------------------------------------------------------------ */
 
 
+
+/*
+Setup function
+
+
+void SD_Setup()
+void WIFI_Setup()
+void Sensors_Setup()
+void GPS_Setup()
+
+
+*/
+
 void SD_Setup()
 {
   Serial.print("Initializing SD card...");
@@ -446,6 +459,19 @@ void loop() {
 }
 
 
+/*
+
+void WIFI_Updata()
+void Light_Level()
+void Caculate_Wind_Speed()
+void Updata_PM25()
+void Updata_Temperature_Humidity()
+void Pressure()
+void WindDirUpdata()
+void GPS_Updata()
+*/
+
+
 
 
 void WIFI_Updata()
@@ -543,9 +569,12 @@ void Caculate_Wind_Speed()
   Wind_Speed = (float)wind_count/2.4;
   Wind_Speed_Update = Wind_Speed;
   temp = (int)Wind_Speed;
+  Serial.print("Wind_Speed:");
+  Serial.println(Wind_Speed);
   rgbWriteDatagram[19] = temp/10+48;
   rgbWriteDatagram[21] = temp%10+48;
   wind_count=0;
+  
 }
 void Updata_Wind_Speed()
 {
@@ -590,10 +619,12 @@ void Updata_PM25()
   // delay(100);
   // Serial.print("PM2.5:  ");
   //  Serial.println((float(dustVal/1024)-0.0356)*120000*0.035,2);
+  Serial.print("PM25_Raw:");
+  Serial.println(dustVal);
   PM25_Update = (float(dustVal/1024)-0.0356)*120000*0.035;
+  Serial.print("PM25:");
   Serial.println(PM25_Update);
   temp = (int)PM25_Update/5;
-  Serial.println(temp);
   rgbWriteDatagram[5] = temp/100+48;
   rgbWriteDatagram[6] = (temp%100)/10+48;
   rgbWriteDatagram[7] = temp%10+48;
@@ -627,6 +658,8 @@ void Updata_Temperature_Humidity()
   // Serial.print("Humidity (%): ");
   //  Serial.println((float)DHT11.humidity, 2);
   Humidity_Update = (float)DHT11.humidity;
+  Serial.print("Humidity:");
+  Serial.println(Humidity_Update);
   temp = Humidity_Update%100;
   if(temp == 0)
     rgbWriteDatagram[9] = 0;
@@ -638,6 +671,7 @@ void Updata_Temperature_Humidity()
   //  Serial.println((float)DHT11.temperature, 2);
 
   Temperature_Update = (DHT11.temperature) * 10;
+  Serial.print("Temperature:");
   Serial.println(Temperature_Update);
   Temperature_temp = (int)Temperature_Update;
   temp = Temperature_temp/1000;
@@ -688,6 +722,8 @@ void Pressure()
 {      
   int temp = 0;
   AirPressure = bmp.readPressure()/10;
+  Serial.print("Pressure:");
+  Serial.println(AirPressure);
   temp = (AirPressure%100000)/10000;
   if(temp == 0)
     rgbWriteDatagram[28] = 0;
@@ -707,6 +743,7 @@ void WindDirUpdata()
   WindDirValue = ((WindDirValue*5/1023)-0.4)/16*360;
   Serial.print("windDir:");
   Serial.println(WindDirValue);
+  
   if(WindDirValue<4.5)
     rgbWriteDatagram[35] = 1+48;
   if(WindDirValue>=4.5 && WindDirValue <9)
@@ -725,7 +762,8 @@ void WindDirUpdata()
   if(WindDirValue>=31.5)
     rgbWriteDatagram[35] = 8+48;
     
-    
+  Serial.print("windDirCode:");
+  Serial.println(rgbWriteDatagram[35]);
   
 }
 
@@ -797,3 +835,8 @@ void GPS_Updata()
    }
 }
 
+
+void WriteSDCard()
+{
+  
+}
