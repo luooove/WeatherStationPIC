@@ -589,7 +589,7 @@ void stateChange()
 
 
 /***********************************/
-void Updata_Water_Level()
+void Updata_Water_Level()   //需要除以系数
 {
   val = analogRead(analogPin); //读取模拟值送给变量val
   Serial.print("Water:");
