@@ -438,7 +438,7 @@ void setup() {
  *      
  * ------------------------------------------------------------ */
 void loop() {
-  GPS_Updata();
+ // GPS_Updata();
   Light_Level();
   Pressure();
   Caculate_Wind_Speed();
@@ -446,7 +446,7 @@ void loop() {
   Updata_Temperature_Humidity();
   Updata_PM25();
   WindDirUpdata();
-  GPS_Updata();
+ // GPS_Updata();
   WriteSDCard();
   Serial.println("");
   WIFI_Updata();
@@ -744,7 +744,7 @@ void WindDirUpdata()
 
 void GPS_Updata()
 {
-  Serial.println("GPSGPSGPSG");
+ // Serial.println("GPSGPSGPSG");
   digitalWrite(ledPin, HIGH);
   byteGPS=Serial1.read();         // Read a byte of the serial port
    if (byteGPS == -1) {           // See if the port is empty yet
