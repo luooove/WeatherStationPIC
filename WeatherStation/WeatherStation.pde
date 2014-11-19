@@ -438,6 +438,7 @@ void setup() {
  *      
  * ------------------------------------------------------------ */
 void loop() {
+  GPS_Updata();
   Light_Level();
   Pressure();
   Caculate_Wind_Speed();
