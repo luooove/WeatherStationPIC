@@ -594,9 +594,9 @@ void Updata_Water_Level()   //需要除以系数
   val = analogRead(analogPin); //读取模拟值送给变量val
   Serial.print("Water:");
   Serial.println(val);
-  Water_Level_Update = val%1000; //变量val 赋值给变量data
-  rgbWriteDatagram[0] = (byte)Water_Level_Update%10+48;
-  rgbWriteDatagram[2] = (byte)(Water_Level_Update*10)%10+48;
+  Water_Level_Update = val/25; //变量val 赋值给变量data
+  rgbWriteDatagram[0] = (byte)Water_Level_Update/10+48;
+  rgbWriteDatagram[2] = (byte)(Water_Level_Update)%10+48;
   // Serial.println("_______________________");
   //  Serial.print("Water_Level:");
   //  Serial.println(data,2); //串口打印变量data
