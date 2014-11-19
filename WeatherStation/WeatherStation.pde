@@ -51,7 +51,7 @@ Designer：骆晓祥 刘宇林 王衡
 PM2.5		GP2Y1010AU0F 				        模拟口A0 数字口2
 气压		BMP180						SCL 
 液位		液位传感器（电容）			                模拟口A11
-风速		光电开关	                                        数字口3
+风速		光电开关	                                        数字口7, and interrupt number is 2
 光线		光线传感器 模拟输出 			        模拟口A6
 风向		光线传感器 模拟输出 			        模拟口A2				
 */
@@ -228,7 +228,7 @@ float offTime=9680;
 /*******Wind_Speed**********/
 float Wind_Speed=0;
 int wind_count=0;
-int pbIn = 3;
+int pbIn = 2;
 
 /*******Light_Speed**********/
 int Light = A6;
@@ -334,22 +334,22 @@ void SD_Setup()
     Serial.println("error opening test.txt");
   }
 
-  // re-open the file for reading:
-  myFile = SD.open("test.txt");
-  if (myFile) {
-    Serial.println("test.txt:");
-
-    // read from the file until there's nothing else in it:
-    while (myFile.available()) {
-      Serial.write(myFile.read());
-    }
-    // close the file:
-    myFile.close();
-  } 
-  else {
-    // if the file didn't open, print an error:
-    Serial.println("error opening test.txt");
-  }
+//  // re-open the file for reading:
+//  myFile = SD.open("test.txt");
+//  if (myFile) {
+//    Serial.println("test.txt:");
+//
+//    // read from the file until there's nothing else in it:
+//    while (myFile.available()) {
+//      Serial.write(myFile.read());
+//    }
+//    // close the file:
+//    myFile.close();
+//  } 
+//  else {
+//    // if the file didn't open, print an error:
+//    Serial.println("error opening test.txt");
+//  }
 }
 
 
@@ -444,6 +444,7 @@ void loop() {
   Updata_PM25();
   WindDirUpdata();
   GPS_Updata();
+  WriteSDCard();
   WIFI_Updata();
   //    Serial.print("Temperature = ");
   //    Serial.print(bmp.readTemperature());
@@ -464,6 +465,7 @@ void loop() {
 void WIFI_Updata()
 void Light_Level()
 void Caculate_Wind_Speed()
+Updata_Water_Level() 
 void Updata_PM25()
 void Updata_Temperature_Humidity()
 void Pressure()
@@ -584,6 +586,7 @@ void Updata_Wind_Speed()
 void stateChange()
 {
   wind_count = wind_count+1;
+  Serial.println("*");
 }
 
 
@@ -685,38 +688,6 @@ void Updata_Temperature_Humidity()
   // delay(2000);
 }
 
-
-
-double Kelvin(double celsius)
-{
-  return celsius + 273.15;
-}     //摄氏温度转化为开氏温度
-
-// 露点（点在此温度时，空气饱和并产生露珠）
-// 参考: http://wahiduddin.net/calc/density_algorithms.htm 
-double dewPoint(double celsius, double humidity)
-{
-  double AA0= 373.15/(273.15 + celsius);
-  double SUM = -7.90298 * (AA0-1);
-  SUM += 5.02808 * log10(AA0);
-  SUM += -1.3816e-7 * (pow(10, (11.344*(1-1/AA0)))-1) ;
-  SUM += 8.1328e-3 * (pow(10,(-3.49149*(AA0-1)))-1) ;
-  SUM += log10(1013.246);
-  double VP = pow(10, SUM-3) * humidity;
-  double T = log(VP/0.61078);   // temp var
-  return (241.88 * T) / (17.558-T);
-}
-
-// 快速计算露点，速度是5倍dewPoint()
-// 参考: http://en.wikipedia.org/wiki/Dew_point
-double dewPointFast(double celsius, double humidity)
-{
-  double a = 17.271;
-  double b = 237.7;
-  double temp = (a * celsius) / (b + celsius) + log(humidity/100);
-  double Td = (b * temp) / (a - temp);
-  return Td;
-}
 
 void Pressure()
 {      
@@ -843,7 +814,16 @@ void WriteSDCard()
   // if the file opened okay, write to it:
   if (myFile) {
     Serial.print("Writing all data to test.txt...");
-    myFile.print("WaterLevel:");myFile.println("WaterLevel:");
+    myFile.print("WaterLevel:");myFile.println(Water_Level_Update);
+    myFile.print("PM2.5:");myFile.println(PM25_Update/5);
+    myFile.print("Temperature:");myFile.println(Temperature_Update/10);
+    myFile.print("Humidity:");myFile.println(Humidity_Update);
+    myFile.print("Wind_Speed:");myFile.println(Wind_Speed);
+    myFile.print("WindDir:");myFile.println(rgbWriteDatagram[35]);
+    myFile.print("Light:");myFile.println(Light_Update);
+    myFile.print("AirPressure:");myFile.println(AirPressure);
+    myFile.println("");
+    myFile.println("---------");
     // close the file:
     myFile.close();
     Serial.println("done.");
