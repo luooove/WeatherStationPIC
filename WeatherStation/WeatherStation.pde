@@ -200,8 +200,8 @@ byte rgbWriteDatagram[] = {
   '1','1','1','1','|',//光照                    23
   ' ','9','6','4','.','4','|',//气压            28
   '1','|',//wind direction                     35
-  '3','0','.','6','9','9','|',//纬度            37
-  '1','0','4','.','0','4','8','\n'};//经度      44
+  '3','1','.','2','9','6','|',//纬度            37
+  '1','2','1','.','1','8','2','\n'};//经度      44
 int cbWriteDatagram = sizeof(rgbWriteDatagram);
 
 
@@ -402,13 +402,15 @@ void Sensors_Setup()
 
 void GPS_Setup()
 {
-  Serial1.begin(9600);
+  pinMode(ledPin, OUTPUT);       // Initialize LED pin
+  
    for (int i=0;i<300;i++){       // Initialize a buffer for received data
      linea[i]=' ';
    }   
 }
 
 void setup() {
+  Serial1.begin(9600);
   Serial.begin(9600);
   SD_Setup();
   WIFI_Setup();
@@ -741,6 +743,7 @@ void WindDirUpdata()
 
 void GPS_Updata()
 {
+  Serial.println("GPSGPSGPSG");
   digitalWrite(ledPin, HIGH);
   byteGPS=Serial1.read();         // Read a byte of the serial port
    if (byteGPS == -1) {           // See if the port is empty yet
