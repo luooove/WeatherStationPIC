@@ -445,6 +445,7 @@ void loop() {
   WindDirUpdata();
   GPS_Updata();
   WriteSDCard();
+  Serial.println("");
   WIFI_Updata();
   //    Serial.print("Temperature = ");
   //    Serial.print(bmp.readTemperature());
@@ -586,7 +587,7 @@ void Updata_Wind_Speed()
 void stateChange()
 {
   wind_count = wind_count+1;
-  Serial.println("*");
+//  Serial.println("*");
 }
 
 
