@@ -53,7 +53,7 @@ PM2.5		GP2Y1010AU0F 				        模拟口A0 数字口2
 液位		液位传感器（电容）			                模拟口A11
 风速		光电开关	                                        数字口3
 光线		光线传感器 模拟输出 			        模拟口A6
-风向		光线传感器 模拟输出 			        模拟口A1				
+风向		光线传感器 模拟输出 			        模拟口A2				
 */
 
 
@@ -103,7 +103,7 @@ const int chipSelect_SD = chipSelect_SD_default;
 /*                                                                      */
 /************************************************************************/
 
-char * szIPServer = "192.168.165.2";
+char * szIPServer = "192.168.165.152";
 unsigned short portServer = 8080;           //DNETcK::iPersonalPorts44 + 400;     // port 44400
 
 // Specify the SSID
@@ -119,7 +119,7 @@ const char * szSsid = "robot";
 // modify the security key to what you have.
 #if defined(USE_WPA2_PASSPHRASE)
 
-const char * szPassPhrase = "swjtumakerspace";
+const char * szPassPhrase = "swjtumakerspace";//swjtumakerspace
 #define WiFiConnectMacro() DWIFIcK::connect(szSsid, szPassPhrase, &status)
 
 #elif defined(USE_WPA2_KEY)
@@ -180,7 +180,7 @@ STATE;
 STATE state = WRITE;
 
 unsigned tStart = 0;
-unsigned tWait = 5000;
+unsigned tWait = 1000;
 
 // must have a datagram cache
 byte rgbDatagramCache[2048];
@@ -246,7 +246,7 @@ int AirPressure = 0;
 
 /*******Wind_Dir**********/
 //int WindSpeed = A0;    // select the input pin for the potentiometer
-int WindDir = A1;    // select the input pin for the potentiometer
+int WindDir = A2;    // select the input pin for the potentiometer
 int sensorValue = 0;  // variable to store the value coming from the sensor
 //float WindSpeedValue = 0;
 float WindDirValue = 0;
@@ -738,9 +738,9 @@ void Pressure()
 void WindDirUpdata()
 {
   WindDirValue = analogRead(WindDir);    
-  Serial.print("V:");
+  Serial.print("windDir_Raw:");
   Serial.println(WindDirValue);
-  WindDirValue = ((WindDirValue*5/1023)-0.4)/16*360;
+  WindDirValue = ((WindDirValue*5/1023)-0.4)/16*360/1.66;
   Serial.print("windDir:");
   Serial.println(WindDirValue);
   
