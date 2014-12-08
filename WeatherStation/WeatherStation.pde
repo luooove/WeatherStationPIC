@@ -103,7 +103,7 @@ const int chipSelect_SD = chipSelect_SD_default;
 /*                                                                      */
 /************************************************************************/
 
-char * szIPServer = "192.168.165.152";
+char * szIPServer = "192.168.43.253";
 unsigned short portServer = 8080;           //DNETcK::iPersonalPorts44 + 400;     // port 44400
 
 // Specify the SSID
@@ -195,7 +195,7 @@ byte rgbWriteDatagram[] = {
   '1','.','3','|',//降水量        两位 一位是小数  0
   ' ','1','6','0','|',//P2.5                    4
   ' ','6','5','|',//湿度                         9
-  ' ','2','0','.','8','|',//温度                13
+  ' ','2','0','.','0','|',//温度                13
   '2','.','8','|',//风速                        19
   '1','1','1','1','|',//光照                    23
   ' ','9','6','4','.','4','|',//气压            28
@@ -668,27 +668,29 @@ void Updata_Temperature_Humidity()
   Serial.print("Humidity:");
   Serial.println(Humidity_Update);
   temp = Humidity_Update%100;
-  if(temp == 0)
-    rgbWriteDatagram[9] = 0;
-  else
-    rgbWriteDatagram[9] = 0;
+//  if(temp == 0)
+//    rgbWriteDatagram[9] = 32;
+//  else
+//    rgbWriteDatagram[9] = temp+48;
   rgbWriteDatagram[10] = (Humidity_Update%100)/10+48;
   rgbWriteDatagram[11] = (Humidity_Update%10)+48;
   //  Serial.print("Temperature (oC): ");
   //  Serial.println((float)DHT11.temperature, 2);
 
-  Temperature_Update = (DHT11.temperature) * 10;
+  Temperature_Update = (DHT11.temperature);
   Serial.print("Temperature:");
   Serial.println(Temperature_Update);
   Temperature_temp = (int)Temperature_Update;
   temp = Temperature_temp/1000;
-  if(temp == 0)
-    rgbWriteDatagram[13] = 0;
-  else
-    rgbWriteDatagram[13] = temp+48;
-  rgbWriteDatagram[14] = (Temperature_temp%1000)/100+48;
-  rgbWriteDatagram[15] = (Temperature_temp%100)/10+48;
-  rgbWriteDatagram[17] = (Temperature_temp%10)+48;
+//  if(temp == 0)
+//    rgbWriteDatagram[13] = 32;
+//  else
+//    rgbWriteDatagram[13] = temp+48;
+//  rgbWriteDatagram[14] = (Temperature_temp%1000)/100+48;
+//  rgbWriteDatagram[15] = (Temperature_temp%100)/10+48;
+    rgbWriteDatagram[14] = Temperature_temp/10+48;
+  rgbWriteDatagram[15] = Temperature_temp%10+48;
+ // rgbWriteDatagram[17] = (Temperature_temp%10)+48;
   // delay(2000);
 }
 
@@ -701,7 +703,7 @@ void Pressure()
   Serial.println(AirPressure);
   temp = (AirPressure%100000)/10000;
   if(temp == 0)
-    rgbWriteDatagram[28] = 0;
+    rgbWriteDatagram[28] = 32;
   else
     rgbWriteDatagram[28] = temp+48;
   rgbWriteDatagram[29] = (AirPressure%10000)/1000+48;
